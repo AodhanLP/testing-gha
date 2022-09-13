@@ -39,7 +39,7 @@ jobs:
 
   build:
     name: Build the App
-    needs: has-label
+    needs: haslabel
     # if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -55,7 +55,7 @@ jobs:
    
   test:
     name: Test the App
-    needs: has-label
+    needs: haslabel
     # if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -71,7 +71,7 @@ jobs:
 
   jenkins:
     name: Call Jenkins Job
-    needs: [build, test, has-label]
+    needs: [build, test, haslabel]
     # if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
