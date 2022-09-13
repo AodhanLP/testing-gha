@@ -73,7 +73,7 @@ jobs:
   jenkins:
     name: Call Jenkins Job
     needs: [build, test, haslabel]
-    if: needs.haslabel.outputs.label-jenkins || needs.haslabel.outputs.label-smoke
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
