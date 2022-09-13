@@ -51,12 +51,12 @@ jobs:
         run: echo "Building the App :)"
  
       - name: Echo the labels
-        run: echo "${{ needs.haslabel.outputs.label-build }}"
+        run: echo echo ${{needs.haslabel.outputs.label-build}}
    
   test:
     name: Test the App
     needs: haslabel
-    # if: needs.haslabel.outputs.build
+    # if: needs.haslabel.outputs.label-build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -67,12 +67,12 @@ jobs:
         run: echo "Calling Jenkins Job :)"
 
       - name: Echo the labels
-        run: echo ${{ needs.haslabel.outputs.label-build }}
+        run: echo ${{needs.haslabel.outputs.label-build}}
 
   jenkins:
     name: Call Jenkins Job
     needs: [build, test, haslabel]
-    # if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
+    # if: needs.haslabel.outputs.label-jenkins || needs.haslabel.outputs.label-smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -84,6 +84,6 @@ jobs:
 
       - name: Echo the labels
         run: |
-          echo "${{ needs.haslabel.outputs.label-jenkins }}"
-          echo "${{ needs.haslabel.outputs.label-smoke }}"
+          echo ${{needs.haslabel.outputs.label-jenkins}}
+          echo ${{needs.haslabel.outputs.label-smoke}}
 
