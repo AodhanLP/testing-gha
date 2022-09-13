@@ -15,12 +15,13 @@ concurrency:
 
 jobs:
   haslabel:
+    name: Has Labels
     runs-on: ubuntu-latest
 
     outputs:
-      jenkins: ${{ steps.haslabel.outputs.labeled-jenkins }}
-      smoke: ${{ steps.haslabel.outputs.labeled-smoke }}
-      build: ${{ steps.haslabel.outputs.labeled-build }}
+      jenkins: ${{ steps.label-jenkins.outputs.labeled-jenkins }}
+      smoke: ${{ steps.label-smoke.outputs.labeled-smoke }}
+      build: ${{ steps.label-build.outputs.labeled-build }}
 
     steps:
       - uses: actions/checkout@v2
