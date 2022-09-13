@@ -1,14 +1,46 @@
 name: Integration Suite
 
-on: ['push']
+on:
+ pull_request:
+  types:
+    - opened
+    - synchronize
+    - labeled
+  branches:
+    - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
+  has-label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Labeled to jenkins
+        id: label-jenkins
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'jenkins'
+
+      - name: Labeled to Smoke
+        id: label-smoke
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'Smoke'
+
+      - name: Labeled to jenkins
+        id: label-build
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'build'
+
   build:
     name: Build the App
+    needs: has-label
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -20,6 +52,8 @@ jobs:
     
   test:
     name: Test the App
+    needs: has-label
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -31,7 +65,8 @@ jobs:
 
   jenkins:
     name: Call Jenkins Job
-    needs: [build, test]
+    needs: [build, test, has-label]
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
