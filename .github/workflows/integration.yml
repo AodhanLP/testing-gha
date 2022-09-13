@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      output-jenkins: ${{ steps.label-jenkins.outputs.test }}
-      output-smoke: ${{ steps.label-smoke.outputs.test }}
-      output-build: ${{ steps.label-build.outputs.test }}
+      jenkins: ${{ steps.haslabel.outputs.labeled-jenkins }}
+      smoke: ${{ steps.haslabel.outputs.labeled-smoke }}
+      build: ${{ steps.haslabel.outputs.labeled-build }}
 
     steps:
       - uses: actions/checkout@v2
@@ -57,7 +57,7 @@ jobs:
         run: echo "Building the App :)"
  
       - name: Echo the labels
-        run: echo ${{needs.haslabel.outputs.output-build}}
+        run: echo ${{needs.haslabel.outputs.build}}
    
   test:
     name: Test the App
@@ -73,7 +73,7 @@ jobs:
         run: echo "Calling Jenkins Job :)"
 
       - name: Echo the labels
-        run: echo ${{needs.haslabel.outputs.output-build}}
+        run: echo ${{needs.haslabel.outputs.build}}
 
   jenkins:
     name: Call Jenkins Job
@@ -90,5 +90,5 @@ jobs:
 
       - name: Echo the labels
         run: |
-          echo ${{needs.haslabel.outputs.output-jenkins}}
-          echo ${{needs.haslabel.outputs.output-smoke}}
+          echo ${{needs.haslabel.outputs.jenkins}}
+          echo ${{needs.haslabel.outputs.smoke}}
