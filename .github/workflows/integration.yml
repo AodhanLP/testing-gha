@@ -60,7 +60,7 @@ jobs:
   test:
     name: Test the App
     needs: haslabel
-    if: needs.haslabel.outputs.label-build
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
