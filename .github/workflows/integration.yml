@@ -1,0 +1,42 @@
+name: Integration Suite
+
+on: ['push']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  build:
+    name: Build the App
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run commands to build the application
+        run: echo "Building the App :)"
+    
+  test:
+    name: Test the App
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run commands to test the application
+        run: echo "Calling Jenkins Job :)"
+
+  jenkins:
+    name: Call Jenkins Job
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Call the Jenkins Job to Build Docker Images
+        run: echo "Calling Jenkins Job :)"
