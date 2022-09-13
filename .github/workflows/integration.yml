@@ -16,6 +16,12 @@ concurrency:
 jobs:
   haslabel:
     runs-on: ubuntu-latest
+
+    outputs:
+      output-jenkins: ${{ steps.label-jenkins.outputs.test }}
+      output-smoke: ${{ steps.label-smoke.outputs.test }}
+      output-build: ${{ steps.label-build.outputs.test }}
+
     steps:
       - uses: actions/checkout@v2
 
@@ -51,7 +57,7 @@ jobs:
         run: echo "Building the App :)"
  
       - name: Echo the labels
-        run: echo ${{needs.haslabel.outputs.label-build}}
+        run: echo ${{needs.haslabel.outputs.output-build}}
    
   test:
     name: Test the App
@@ -67,7 +73,7 @@ jobs:
         run: echo "Calling Jenkins Job :)"
 
       - name: Echo the labels
-        run: echo ${{needs.haslabel.outputs.label-build}}
+        run: echo ${{needs.haslabel.outputs.output-build}}
 
   jenkins:
     name: Call Jenkins Job
@@ -84,6 +90,5 @@ jobs:
 
       - name: Echo the labels
         run: |
-          echo ${{needs.haslabel.outputs.label-jenkins}}
-          echo ${{needs.haslabel.outputs.label-smoke}}
-
+          echo ${{needs.haslabel.outputs.output-jenkins}}
+          echo ${{needs.haslabel.outputs.output-smoke}}
