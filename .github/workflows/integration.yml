@@ -51,7 +51,7 @@ jobs:
         run: echo "Building the App :)"
  
       - name: Echo the labels
-        run: echo "${{ needs.haslabel.outputs.build }}"
+        run: echo "${{ needs.haslabel.outputs.label-build }}"
    
   test:
     name: Test the App
@@ -67,7 +67,7 @@ jobs:
         run: echo "Calling Jenkins Job :)"
 
       - name: Echo the labels
-        run: echo "${{ needs.haslabel.outputs.build }}"
+        run: echo ${{ needs.haslabel.outputs.label-build }}
 
   jenkins:
     name: Call Jenkins Job
@@ -84,6 +84,6 @@ jobs:
 
       - name: Echo the labels
         run: |
-          echo "${{ needs.haslabel.outputs.jenkins }}"
-          echo "${{ needs.haslabel.outputs.Smoke }}"
+          echo "${{ needs.haslabel.outputs.label-jenkins }}"
+          echo "${{ needs.haslabel.outputs.label-smoke }}"
 
