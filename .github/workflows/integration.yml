@@ -47,7 +47,7 @@ jobs:
   build:
     name: Build the App
     needs: haslabel
-    # if: needs.haslabel.outputs.build
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -56,14 +56,11 @@ jobs:
 
       - name: Run commands to build the application
         run: echo "Building the App :)"
- 
-      - name: Echo the labels
-        run: echo ${{needs.haslabel.outputs.build}}
    
   test:
     name: Test the App
     needs: haslabel
-    # if: needs.haslabel.outputs.label-build
+    if: needs.haslabel.outputs.label-build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -73,13 +70,10 @@ jobs:
       - name: Run commands to test the application
         run: echo "Calling Jenkins Job :)"
 
-      - name: Echo the labels
-        run: echo ${{needs.haslabel.outputs.build}}
-
   jenkins:
     name: Call Jenkins Job
     needs: [build, test, haslabel]
-    # if: needs.haslabel.outputs.label-jenkins || needs.haslabel.outputs.label-smoke
+    if: needs.haslabel.outputs.label-jenkins || needs.haslabel.outputs.label-smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -88,8 +82,3 @@ jobs:
 
       - name: Call the Jenkins Job to Build Docker Images
         run: echo "Calling Jenkins Job :)"
-
-      - name: Echo the labels
-        run: |
-          echo ${{needs.haslabel.outputs.jenkins}}
-          echo ${{needs.haslabel.outputs.smoke}}
