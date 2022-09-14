@@ -11,18 +11,11 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
-  haslabel:
-    name: Has Labels
+  has-label:
     runs-on: ubuntu-latest
-
-    outputs:
-      jenkins: ${{ steps.label-jenkins.outputs.labeled-jenkins }}
-      smoke: ${{ steps.label-smoke.outputs.labeled-smoke }}
-      build: ${{ steps.label-build.outputs.labeled-build }}
-
     steps:
       - uses: actions/checkout@v2
 
@@ -42,12 +35,12 @@ jobs:
         id: label-build
         uses: DanielTamkin/HasLabel@v1.0.4
         with:
-          contains: 'Integration'
+          contains: 'build'
 
   build:
     name: Build the App
-    needs: haslabel
-    if: needs.haslabel.outputs.build || github.ref == 'refs/heads/main'
+    needs: has-label
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -56,11 +49,11 @@ jobs:
 
       - name: Run commands to build the application
         run: echo "Building the App :)"
-   
+    
   test:
     name: Test the App
-    needs: haslabel
-    if: needs.haslabel.outputs.build || github.ref == 'refs/heads/main'
+    needs: has-label
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -72,8 +65,8 @@ jobs:
 
   jenkins:
     name: Call Jenkins Job
-    needs: [build, test, haslabel]
-    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke || github.ref == 'refs/heads/main'
+    needs: [build, test, has-label]
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
