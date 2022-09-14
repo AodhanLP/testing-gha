@@ -47,7 +47,7 @@ jobs:
   build:
     name: Build the App
     needs: haslabel
-    if: needs.haslabel.outputs.build || github.ref == refs/heads/main
+    if: needs.haslabel.outputs.build || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -60,7 +60,7 @@ jobs:
   test:
     name: Test the App
     needs: haslabel
-    if: needs.haslabel.outputs.build || github.ref == refs/heads/main
+    if: needs.haslabel.outputs.build || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -73,7 +73,7 @@ jobs:
   jenkins:
     name: Call Jenkins Job
     needs: [build, test, haslabel]
-    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke || github.ref == refs/heads/main
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
