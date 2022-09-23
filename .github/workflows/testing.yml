@@ -49,5 +49,5 @@ jobs:
       - name: Print jenkins Label
         run: echo ${{needs.haslabel.outputs.jenkins}}
 
-      - name: Print Smoke Label
+      - name: Print Smoke Labels
         run: echo ${{needs.haslabel.outputs.smoke}}
