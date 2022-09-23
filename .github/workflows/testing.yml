@@ -38,7 +38,41 @@ jobs:
   printlabels:
     needs: haslabel
     if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
-    name: Print Labels
+    name: Print Labels 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Print Labels
+        run: echo "We are gonna print some labels!"
+
+      - name: Print jenkins Label
+        run: echo ${{needs.haslabel.outputs.jenkins}}
+
+      - name: Print Smoke Label
+        run: echo ${{needs.haslabel.outputs.smoke}}
+
+  printlabels2:
+    needs: [haslabel, printlabels]
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
+    name: Print Labels 2
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Print Labels
+        run: echo "We are gonna print some labels!"
+
+      - name: Print jenkins Label
+        run: echo ${{needs.haslabel.outputs.jenkins}}
+
+      - name: Print Smoke Label
+        run: echo ${{needs.haslabel.outputs.smoke}}
+
+  printlabels3:
+    needs: [haslabel, printlabels, printlabels2]
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
+    name: Print Labels 3
     runs-on: ubuntu-latest
     timeout-minutes: 3
 
