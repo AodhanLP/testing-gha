@@ -43,6 +43,9 @@ jobs:
     timeout-minutes: 3
 
     steps:
+      - name: Print Labels
+        run: echo "We are gonna print some labels!"
+
       - name: Print jenkins Label
         run: echo ${{needs.haslabel.outputs.jenkins}}
 
