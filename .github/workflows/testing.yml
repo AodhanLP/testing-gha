@@ -1,0 +1,50 @@
+name: Test Workflow
+
+on:
+  push:
+  pull_request:
+    types:
+    - labeled
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  haslabel:
+    name: Has Labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    outputs:
+      jenkins: ${{ steps.label-jenkins.outputs.labeled-jenkins }}
+      smoke: ${{ steps.label-smoke.outputs.labeled-smoke }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Labeled to jenkins
+        id: label-jenkins
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'jenkins'
+
+      - name: Labeled to Smoke
+        id: label-smoke
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'Smoke'
+
+  printlabels:
+    needs: haslabel
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
+    name: Print Labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Print jenkins Label
+        run: echo ${{needs.haslabel.outputs.jenkins}}
+
+      - name: Print Smoke Label
+        run: echo ${{needs.haslabel.outputs.smoke}}
