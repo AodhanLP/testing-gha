@@ -43,7 +43,7 @@ jobs:
     timeout-minutes: 3
 
     steps:
-      - name: Print Labels
+      - name: Print Label
         run: echo "We are gonna print some labels!"
 
       - name: Print jenkins Label
