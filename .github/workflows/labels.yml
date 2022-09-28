@@ -11,6 +11,19 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test
+        run: |
+          x=${{ toJson(github.event.pull_request.labels.*.name) }}
+          echo $x
+
   build:
     name: Build Label
     if: contains(github.event.pull_request.labels.*.name, 'Build')
@@ -20,8 +33,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run commands to build the application
+      - name: Check the Build label
         run: echo "Build label is here! :)"
+
+      - name: Test
+        run: |
+          x=${{ toJson(github.event.pull_request.labels.*.name) }}
+          echo $x
    
   smoke:
     name: Smoke Label
@@ -32,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run commands to test the application
+      - name: Check the Smoke label
         run: echo "Smoke label is here! :)"
 
   jenkins:
@@ -44,5 +62,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Call the Jenkins Job to Build Docker Images
+      - name: Check the Jenkins label
         run: echo "jenkins label is here! :)"
