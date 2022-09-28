@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   haslabel:
-    name: Has Labels
+    name: Has Labels (NEW SOLUTION)
     runs-on: ubuntu-latest
 
     outputs:
@@ -28,9 +28,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labels: '["jenkins"]'
 
-      - name: See result
-        run: echo "${{ steps.label-jenkins.outputs.result }}"
-
       - name: Labeled to Smoke
         id: label-smoke
         uses: shioyang/check-pr-labels-on-push-action@v1.0.6
@@ -38,18 +35,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labels: '["Smoke"]'
 
-      - name: See result
-        run: echo "${{ steps.label-smoke.outputs.result }}"
-
       - name: Labeled to Build
         id: label-build
         uses: shioyang/check-pr-labels-on-push-action@v1.0.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labels: '["Build"]'
-
-      - name: See result
-        run: echo "${{ steps.label-build.outputs.result }}"
 
   build:
     name: Build Label
