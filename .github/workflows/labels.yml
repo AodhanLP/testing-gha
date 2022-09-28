@@ -15,6 +15,11 @@ jobs:
     name: Has Labels
     runs-on: ubuntu-latest
 
+    outputs:
+      jenkins: ${{ steps.label-jenkins.outputs.result }}
+      smoke: ${{ steps.label-smoke.outputs.result }}
+      build: ${{ steps.label-build.outputs.result }}
+
     steps:
       - name: Labeled to jenkins
         id: label-jenkins
@@ -62,7 +67,7 @@ jobs:
   smoke:
     name: Smoke Label
     needs: haslabel
-    if: ${{ needs.haslabel.steps.label-smoke.outputs.result }}
+    if: needs.haslabel.outputs.smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -75,7 +80,7 @@ jobs:
   jenkins:
     name: jenkins Label
     needs: haslabel
-    if: ${{ needs.haslabel.steps.label-jenkins.outputs.result }}
+    if: needs.haslabel.outputs.jenkins
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
