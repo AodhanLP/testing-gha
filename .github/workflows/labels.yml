@@ -16,36 +16,57 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      jenkins: ${{ steps.label-jenkins.outputs.result }}
-      smoke: ${{ steps.label-smoke.outputs.result }}
-      build: ${{ steps.label-build.outputs.result }}
+      push-jenkins: ${{ steps.push-jenkins.outputs.result }}
+      push-smoke: ${{ steps.push-smoke.outputs.result }}
+      push-build: ${{ steps.push-build.outputs.result }}
+      label-jenkins: ${{ steps.label-jenkins.outputs.labeled-jenkins }}
+      label-smoke: ${{ steps.label-smoke.outputs.labeled-smoke }}
+      label-build: ${{ steps.label-build.outputs.labeled-build }}
 
     steps:
-      - name: Labeled to jenkins
-        id: label-jenkins
+      - name: Labeled to jenkins (Push Event)
+        id: push-jenkins
         uses: shioyang/check-pr-labels-on-push-action@v1.0.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labels: '["jenkins"]'
 
-      - name: Labeled to Smoke
-        id: label-smoke
+      - name: Labeled to Smoke (Push Event)
+        id: push-smoke
         uses: shioyang/check-pr-labels-on-push-action@v1.0.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labels: '["Smoke"]'
 
-      - name: Labeled to Build
-        id: label-build
+      - name: Labeled to Build (Push Event)
+        id: push-build
         uses: shioyang/check-pr-labels-on-push-action@v1.0.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labels: '["Build"]'
 
+      - name: Labeled to jenkins (Label Event)
+        id: label-jenkins
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'jenkins'
+
+      - name: Labeled to Smoke (Label Event)
+        id: label-smoke
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'Smoke'
+
+      - name: Labeled to Build (Label Event)
+        id: label-build
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'Build'
+
   build:
     name: Build Label
     needs: haslabel
-    if: needs.haslabel.outputs.build == 'true'
+    if: needs.haslabel.outputs.push-build == 'true' || needs.haslabel.outputs.label-build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -58,7 +79,7 @@ jobs:
   smoke:
     name: Smoke Label
     needs: haslabel
-    if: needs.haslabel.outputs.smoke == 'true'
+    if: needs.haslabel.outputs.push-smoke == 'true' || needs.haslabel.outputs.label-smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -71,7 +92,7 @@ jobs:
   jenkins:
     name: jenkins Label
     needs: haslabel
-    if: needs.haslabel.outputs.jenkins == 'true'
+    if: needs.haslabel.outputs.push-jenkins == 'true' || needs.haslabel.outputs.label-jenkins
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
