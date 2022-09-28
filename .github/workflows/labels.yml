@@ -22,11 +22,6 @@ jobs:
 
       - name: Check the Build label
         run: echo "Build label is here! :)"
-
-      - name: Test
-        run: |
-          x=${{ toJson(github.event.pull_request.labels.*.name) }}
-          echo $x
    
   smoke:
     name: Smoke Label
