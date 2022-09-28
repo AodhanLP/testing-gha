@@ -54,7 +54,7 @@ jobs:
   build:
     name: Build Label
     needs: haslabel
-    if: ${{ needs.haslabel.steps.label-build.outputs.result }}
+    if: needs.haslabel.steps.label-build.outputs.result
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -67,7 +67,7 @@ jobs:
   smoke:
     name: Smoke Label
     needs: haslabel
-    if: ${{ needs.haslabel.steps.label-smoke.outputs.result }}
+    if: needs.haslabel.steps.label-smoke.outputs.result
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -80,7 +80,7 @@ jobs:
   jenkins:
     name: jenkins Label
     needs: haslabel
-    if: ${{ needs.haslabel.steps.label-jenkins.outputs.result }}
+    if: needs.haslabel.steps.label-jenkins.outputs.result
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
