@@ -11,22 +11,41 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  check_pr_labels_job:
+  haslabel:
+    name: Has Labels
     runs-on: ubuntu-latest
-    name: A job to check the PR labels contain given labels
+
+    outputs:
+      jenkins: ${{ steps.label-jenkins.outputs.result }}
+      smoke: ${{ steps.label-smoke.outputs.result }}
+      build: ${{ steps.label-build.outputs.result }}
+
     steps:
-    - name: Check PR labels action step
-      id: check_pr_labels
-      uses: shioyang/check-pr-labels-on-push-action@v1.0.6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        labels: '["jenkins"]'
-    - name: See result
-      run: echo "${{ steps.check_pr_labels.outputs.result }}"
+      - name: Labeled to jenkins
+        id: label-jenkins
+        uses: shioyang/check-pr-labels-on-push-action@v1.0.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          labels: '["jenkins"]'
+
+      - name: Labeled to Smoke
+        id: label-smoke
+        uses: shioyang/check-pr-labels-on-push-action@v1.0.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          labels: '["Smoke"]'
+
+      - name: Labeled to Build
+        id: label-build
+        uses: shioyang/check-pr-labels-on-push-action@v1.0.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          labels: '["Build"]'
 
   build:
     name: Build Label
-    if: "contains(github.event.pull_request.labels.*.name, 'Build')"
+    needs: haslabel
+    if: needs.haslabel.outputs.build
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
