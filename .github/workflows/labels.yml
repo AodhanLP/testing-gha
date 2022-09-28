@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build the App
+    name: Build Label
     if: contains(github.event.pull_request.labels.*.name, 'Build')
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -21,10 +21,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run commands to build the application
-        run: echo "Building the App :)"
+        run: echo "Build label is here! :)"
    
   smoke:
-    name: Smoke Job
+    name: Smoke Label
     if: contains(github.event.pull_request.labels.*.name, 'Smoke')
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -33,10 +33,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run commands to test the application
-        run: echo "Calling Jenkins Job to run Smoke Tests :)"
+        run: echo "Smoke label is here! :)"
 
   jenkins:
-    name: Call Jenkins Job
+    name: jenkins Label
     if: contains(github.event.pull_request.labels.*.name, 'jenkins')
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -45,4 +45,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Call the Jenkins Job to Build Docker Images
-        run: echo "Calling Jenkins Job :)"
+        run: echo "jenkins label is here! :)"
