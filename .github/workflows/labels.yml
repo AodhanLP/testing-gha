@@ -11,21 +11,9 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Test        
-        if: contains(github.event.pull_request.labels.*.name, ${{ 'jenkins' }} )
-        run: echo "jenkins"
-
   build:
     name: Build Label
-    if: contains(github.event.pull_request.labels.*.name, 'Build')
+    if: contains(github.event.pull_request.labels.*.name, ${{ 'Build' }} )
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -42,7 +30,7 @@ jobs:
    
   smoke:
     name: Smoke Label
-    if: contains(github.event.pull_request.labels.*.name, 'Smoke')
+    if: contains(github.event.pull_request.labels.*.name, ${{ 'Smoke' }} )
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -54,7 +42,7 @@ jobs:
 
   jenkins:
     name: jenkins Label
-    if: contains(github.event.pull_request.labels.*.name, 'jenkins')
+    if: contains(github.event.pull_request.labels.*.name, ${{ 'jenkins' }} )
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
