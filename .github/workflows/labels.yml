@@ -13,7 +13,7 @@ concurrency:
 jobs:
   build:
     name: Build the App
-    if: contains(github.event.pull_request.labels.*.name, 'Build') || ${{ github.ref == 'refs/heads/main' }}
+    if: contains(github.event.pull_request.labels.*.name, 'Build')
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -25,7 +25,7 @@ jobs:
    
   smoke:
     name: Smoke Job
-    if: contains(github.event.pull_request.labels.*.name, 'Smoke') || ${{ github.ref == 'refs/heads/main' }}
+    if: contains(github.event.pull_request.labels.*.name, 'Smoke')
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -37,7 +37,7 @@ jobs:
 
   jenkins:
     name: Call Jenkins Job
-    if: contains(github.event.pull_request.labels.*.name, 'jenkins') || ${{ github.ref == 'refs/heads/main' }}
+    if: contains(github.event.pull_request.labels.*.name, 'jenkins')
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
