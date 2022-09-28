@@ -66,7 +66,7 @@ jobs:
   build:
     name: Build Label
     needs: haslabel
-    if: needs.haslabel.outputs.push-build == 'true' || needs.haslabel.outputs.label-build
+    if: needs.haslabel.outputs.push-build == 'true' || needs.haslabel.outputs.label-build || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -79,7 +79,7 @@ jobs:
   smoke:
     name: Smoke Label
     needs: haslabel
-    if: needs.haslabel.outputs.push-smoke == 'true' || needs.haslabel.outputs.label-smoke
+    if: needs.haslabel.outputs.push-smoke == 'true' || needs.haslabel.outputs.label-smoke || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -92,7 +92,7 @@ jobs:
   jenkins:
     name: jenkins Label
     needs: haslabel
-    if: needs.haslabel.outputs.push-jenkins == 'true' || needs.haslabel.outputs.label-jenkins
+    if: needs.haslabel.outputs.push-jenkins == 'true' || needs.haslabel.outputs.label-jenkins || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
