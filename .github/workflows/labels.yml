@@ -57,7 +57,8 @@ jobs:
    
   smoke:
     name: Smoke Label
-    if: "contains(github.event.pull_request.labels.*.name, 'Smoke')"
+    needs: haslabel
+    if: needs.haslabel.outputs.smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -69,7 +70,8 @@ jobs:
 
   jenkins:
     name: jenkins Label
-    if: "contains(github.event.pull_request.labels.*.name, 'jenkins')"
+    needs: haslabel
+    if: needs.haslabel.outputs.jenkins
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
