@@ -9,6 +9,7 @@ on:
       - labeled
       - opened
       - synchronize
+      # test
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
