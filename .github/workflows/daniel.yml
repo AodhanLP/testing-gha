@@ -1,4 +1,4 @@
-name: Integration Suite
+name: Testing Daniel Labels
 
 on:
   push:
@@ -43,41 +43,54 @@ jobs:
         with:
           contains: 'Integration'
 
-  build:
-    name: Build the App
-    needs: haslabel
-    if: needs.haslabel.outputs.build || ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Run commands to build the application
-        run: echo "Building the App :)"
-   
-  test:
-    name: Test the App
-    needs: haslabel
-    if: needs.haslabel.outputs.build || ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Run commands to test the application
-        run: echo "Calling Jenkins Job :)"
-
   jenkins:
-    name: Call Jenkins Job
-    needs: [build, test, haslabel]
-    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke || ${{ github.ref == 'refs/heads/main' }}
+    name: Jenkins
+    needs: haslabel
+    if: needs.haslabel.outputs.jenkins
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Call the Jenkins Job to Build Docker Images
-        run: echo "Calling Jenkins Job :)"
+      - name: Jenkins
+        run: echo "jenkins label is here :)"
+   
+  smoke:
+    name: Smoke
+    needs: haslabel
+    if: needs.haslabel.outputs.smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Smoke
+        run: echo "Smoke label is here :)"
+
+  build:
+    name: Integration
+    needs: haslabel
+    if: needs.haslabel.outputs.build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Integration
+        run: echo "Integration label is here :)"
+
+  jenkins-smoke:
+    name: Call Jenkins Job
+    needs: haslabel
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Jenkins or Smoke
+        run: echo "jenkins or Smoke label is here :)"
