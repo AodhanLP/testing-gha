@@ -2,8 +2,6 @@ name: Testing Daniel Labels on BRANCH
 
 on:
   push:
-    branches:
-    - main
   pull_request:
     branches:
     - main
