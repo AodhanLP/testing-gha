@@ -1,0 +1,83 @@
+name: Integration Suite
+
+on:
+  push:
+  pull_request:
+    types:
+      - labeled
+      # - opened
+      # - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  haslabel:
+    name: Has Labels
+    runs-on: ubuntu-latest
+
+    outputs:
+      jenkins: ${{ steps.label-jenkins.outputs.labeled-jenkins }}
+      smoke: ${{ steps.label-smoke.outputs.labeled-smoke }}
+      build: ${{ steps.label-build.outputs.labeled-build }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Labeled to jenkins
+        id: label-jenkins
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'jenkins'
+
+      - name: Labeled to Smoke
+        id: label-smoke
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'Smoke'
+
+      - name: Labeled to jenkins
+        id: label-build
+        uses: DanielTamkin/HasLabel@v1.0.4
+        with:
+          contains: 'Integration'
+
+  build:
+    name: Build the App
+    needs: haslabel
+    if: needs.haslabel.outputs.build || ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run commands to build the application
+        run: echo "Building the App :)"
+   
+  test:
+    name: Test the App
+    needs: haslabel
+    if: needs.haslabel.outputs.build || ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run commands to test the application
+        run: echo "Calling Jenkins Job :)"
+
+  jenkins:
+    name: Call Jenkins Job
+    needs: [build, test, haslabel]
+    if: needs.haslabel.outputs.jenkins || needs.haslabel.outputs.smoke || ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Call the Jenkins Job to Build Docker Images
+        run: echo "Calling Jenkins Job :)"
