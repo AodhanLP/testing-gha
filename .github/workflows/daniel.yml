@@ -6,7 +6,7 @@ on:
     types:
       - labeled
       - opened
-      # - synchronize
+      # - synchronized
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
